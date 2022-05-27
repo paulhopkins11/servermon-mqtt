@@ -9,6 +9,7 @@ def main():
     parser.add_argument('--data-path', type=str, default='/')
     parser.add_argument('--mqtt-host', type=str)
     parser.add_argument('--debug', action='store_true', default=False)
+    parser.add_argument('--disable-mqtt', action='store_true', default=False)
     parser.add_argument('--mqtt-topic', type=str)
     parser.add_argument('--interval', type=int, default=10)
     args = parser.parse_args()
@@ -25,7 +26,9 @@ def main():
         if args.debug:
             print(f'pub -> {args.mqtt_host} {args.mqtt_topic} {res}', flush=True)
 
-        publish.single(args.mqtt_topic, json.dumps(res), hostname=args.mqtt_host)
+        if not args.disable_mqtt:
+            publish.single(args.mqtt_topic, json.dumps(res), hostname=args.mqtt_host)
+
         sleep(args.interval)
 
 if __name__ == "__main__":
